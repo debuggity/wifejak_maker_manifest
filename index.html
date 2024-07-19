@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <title>Wifejak Creator</title>
     <style>
         body, html {
@@ -25,7 +27,26 @@
             text-align: center;
             font-size: 24px;
             margin-top: 0;
+            position: relative; /* Add this line */
         }
+        #saveBtn {
+            position: absolute;
+            top: 2px;
+            right: 50px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #00008B;
+            border: 2px solid #00008B;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px; /* Adjust the size for the icon */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #saveBtn:hover {
+            background-color: #00008B;
+            color: white;
+        }
+
         .character-area {
             width: 400px;
             max-width: 400px;
@@ -109,6 +130,7 @@
 <body>
     <div class="header">
         Wifejak Creator
+        <button id="saveBtn" onclick="saveCharacter()"><i class="fas fa-download"></i></button>
     </div>
     <div class="container">
         <div class="character-area" id="characterArea">
@@ -132,7 +154,54 @@
                 <!-- Option images will be inserted here -->
             </div>
         </div>
+        <canvas id="compositeCanvas" style="display: none;"></canvas>
     </div>
+    <script>
+        function saveCharacter() {
+            const characterArea = document.getElementById('characterArea');
+            const canvas = document.getElementById('compositeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions to match the character area
+            canvas.width = characterArea.clientWidth;
+            canvas.height = characterArea.clientHeight;
+            
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Get all character layers
+            const layers = characterArea.querySelectorAll('.character-layer');
+            
+            // Draw each layer onto the canvas
+            layers.forEach(layer => {
+                const img = new Image();
+                img.src = layer.src;
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    // Save the canvas as an image when the last image is loaded
+                    if (layer === layers[layers.length - 1]) {
+                        saveCanvasAsImage();
+                    }
+                };
+            });
+        }
+    
+        function saveCanvasAsImage() {
+            const canvas = document.getElementById('compositeCanvas');
+            const image = canvas.toDataURL("image/png");
+    
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'character.png';
+            
+            // Append the link to the body, click it to download the image, then remove it
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+    
     <script>
         const options = {
             glasses: ['./assets/Glasses/Dark Grey Glasses.png', './assets/Glasses/Rave Glasses (orange).png'],
