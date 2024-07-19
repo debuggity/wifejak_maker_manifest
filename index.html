@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wifejak Creator</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .header {
+            background-color: #008080;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+        }
+        .character-area {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .character-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .options-container {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            width: 150px;
+            margin-right: 20px;
+        }
+        .sidebar button {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #008080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .sidebar button:hover {
+            background-color: #005959;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .options img {
+            width: 70px;
+            height: 70px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+        .options img.selected {
+            border-color: #008080;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Wifejak Creator
+        </div>
+        <div class="character-area" id="characterArea">
+            <img id="body" class="character-layer" src="./assets/Wifejak Body/Standard Body.png" style="z-index: 1;">
+            <img id="hair" class="character-layer" src="./assets/Hair/Base Hair.png" style="z-index: 4;">
+            <img id="makeup" class="character-layer" src="./assets/Makeup/Pink Lipstick.png" style="z-index: 3;">
+            <img id="clothes" class="character-layer" src="./assets/Clothes/Shirts/Grey Shirt.png" style="z-index: 2;">
+        </div>
+        <div class="options-container">
+            <div class="sidebar">
+                <button onclick="selectCategory('glasses')">Glasses</button>
+                <button onclick="selectCategory('hair')">Hair</button>
+                <button onclick="selectCategory('clothes')">Clothes</button>
+                <button onclick="selectCategory('makeup')">Makeup</button>
+                <button onclick="selectCategory('mouths')">Mouths</button>
+                <button onclick="selectCategory('accessories')">Accessories</button>
+                <button onclick="selectCategory('arsenal')">Arsenal</button>
+                <button onclick="selectCategory('background')">Background</button>
+            </div>
+            <div class="options" id="options">
+                <!-- Option images will be inserted here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        const options = {
+            glasses: ['./assets/Glasses/Dark Grey Glasses.png', './assets/Glasses/Rave Glasses (orange).png'],
+            hair: ['./assets/Hair/Base Hair.png', './assets/Hair/Buns Hair.png', './assets/Hair/Good Hair Day Hair.png', './assets/Hair/Kirby Hair.png', './assets/Hair/Princess Hair.png'],
+            clothes: ['./assets/Clothes/Jackets & Hoodies/Black Jacket.png', './assets/Clothes/Shirts/Business Shirt.png', './assets/Clothes/Shirts/Grey Shirt.png',
+                    './assets/Clothes/Shirts/Camo Shirt (beige).png', './assets/Clothes/Shirts/Camo Shirt (blue).png', './assets/Clothes/Shirts/Camo Shirt (green).png',
+                    './assets/Clothes/Shirts/Earth Sucks Shirt (orange).png', './assets/Clothes/Shirts/Heart Overalls.png','./assets/Clothes/Shirts/Princess Dress.png','./assets/Clothes/Shirts/Spacesuit.png'],
+            makeup: ['./assets/Makeup/Love Look Makeup.png', './assets/Makeup/Pink Lipstick.png', './assets/Makeup/Red Lipstick.png', './assets/Makeup/Princess Face.png', './assets/Makeup/Rave Makeup.png'],
+            mouths: ['mouth1.png', 'mouth2.png', 'mouth3.png'],
+            accessories: ['./assets/Accessories/Necklaces/Original Heart Necklace.png', './assets/Accessories/Necklaces/Princess Necklace.png', 
+                          './assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png',
+                        './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png','./assets/Accessories/Hats/Princess Tiara.png','./assets/Accessories/Scarfs/Camo Scarf (green).png'],
+            arsenal: ['./assets/Arsenal (Gun Store)/MP5SD UI.png', './assets/Arsenal (Gun Store)/MP5SD.Skin.Pink UI.png'],
+            background: ['background1.png', 'background2.png', 'background3.png']
+        };
+
+        function selectCategory(category) {
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            options[category].forEach(option => {
+                const img = document.createElement('img');
+                img.src = option;
+                img.alt = option;
+                img.onclick = () => selectOption(category, option);
+                optionsDiv.appendChild(img);
+            });
+        }
+
+        selectCategory('clothes');
+
+
+        function selectOption(category, option) {
+            const characterArea = document.getElementById('characterArea');
+            let layer = document.getElementById(category);
+            if (!layer) {
+                layer = document.createElement('img');
+                layer.id = category;
+                layer.className = 'character-layer';
+                
+                // Add z-index based on category
+                switch(category) {
+                    case 'background':
+                        layer.style.zIndex = 0;
+                        break;
+                    case 'body':
+                        layer.style.zIndex = 1;
+                        break;
+                    case 'clothes':
+                        layer.style.zIndex = 2;
+                        break;
+                    case 'makeup':
+                        layer.style.zIndex = 3;
+                        break;
+                    case 'hair':
+                        layer.style.zIndex = 4;
+                        break;
+                    case 'mouths':
+                        layer.style.zIndex = 5;
+                        break;
+                    case 'glasses':
+                        layer.style.zIndex = 6;
+                        break;
+                    case 'accessories':
+                        layer.style.zIndex = 7;
+                        break;
+                    case 'arsenal':
+                        layer.style.zIndex = 8;
+                        break;
+                    default:
+                        layer.style.zIndex = 10; // Default to a high z-index for other categories
+                }
+
+                characterArea.appendChild(layer);
+            }
+            layer.src = option;
+        }
+
+    </script>
+</body>
+</html>
