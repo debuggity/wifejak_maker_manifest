@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <title>Wifejak Creator</title>
     <style>
         body, html {
@@ -96,8 +95,7 @@
         }
         .options {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
             width: 100%;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -107,15 +105,29 @@
             overflow-y: auto;
             max-height: 400px;
         }
-        .options img {
-            width: 70px;
-            height: 70px;
-            margin: 5px;
+        .option-group {
+            margin-bottom: 10px;
+        }
+        .option-group h3 {
+            margin: 5px 0;
+            font-size: 18px;
+            color: #00008B;
+        }
+        .option-group div {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .option-group img {
+            width: 100px; /* Increase the width */
+            height: 100px; /* Increase the height */
+            margin: 10px; /* Adjust the margin for better spacing */
             cursor: pointer;
             border-radius: 10px;
             border: 2px solid transparent;
         }
-        .options img.selected {
+
+        .option-group img.selected {
             border-color: #00008B;
         }
 
@@ -135,20 +147,18 @@
     <div class="container">
         <div class="character-area" id="characterArea">
             <img id="body" class="character-layer" src="./assets/Wifejak Body/Standard Body.png" style="z-index: 1;">
-            <img id="hair" class="character-layer" src="./assets/Hair/Base Hair.png" style="z-index: 4;">
-            <img id="makeup" class="character-layer" src="./assets/Makeup/Pink Lipstick.png" style="z-index: 3;">
-            <img id="clothes" class="character-layer" src="./assets/Clothes/Shirts/Grey Shirt.png" style="z-index: 2;">
+            <img id="hair-Styles" class="character-layer" src="./assets/Hair/Base Hair.png" style="z-index: 4;">
+            <img id="makeup-Full Face" class="character-layer" src="./assets/Makeup/Full Face/Pink Lipstick.png" style="z-index: 3;">
+            <img id="clothes-Shirts" class="character-layer" src="./assets/Clothes/Shirts/Grey Shirt.png" style="z-index: 2;">
         </div>
+
         <div class="options-container">
             <div class="sidebar">
-                <button onclick="selectCategory('glasses')" id="glassesBtn">👓 Glasses</button>
-                <button onclick="selectCategory('hair')" id="hairBtn">💇 Hair</button>
                 <button onclick="selectCategory('clothes')" id="clothesBtn">👗 Clothes</button>
                 <button onclick="selectCategory('makeup')" id="makeupBtn">💄 Makeup</button>
-                <button onclick="selectCategory('mouths')" id="mouthsBtn">👄 Mouths</button>
-                <button onclick="selectCategory('accessories')" id="accessoriesBtn">🎀 Accessories</button>
-                <button onclick="selectCategory('arsenal')" id="arsenalBtn">🔫 Arsenal</button>
-                <button onclick="selectCategory('background')" id="backgroundBtn">🌄 Background</button>
+                <button onclick="selectCategory('hair')" id="hairBtn">💇 Hair</button>
+                <button onclick="selectCategory('accessories')" id="accessoriesBtn">🛠 Accessories</button>
+                <button onclick="selectCategory('expressions')" id="expressionsBtn">😊 Expressions</button>
             </div>
             <div class="options" id="options">
                 <!-- Option images will be inserted here -->
@@ -171,15 +181,17 @@
     
             // Get all character layers
             const layers = characterArea.querySelectorAll('.character-layer');
-            
+            let loadedImages = 0;
+    
             // Draw each layer onto the canvas
-            layers.forEach(layer => {
+            layers.forEach((layer, index) => {
                 const img = new Image();
                 img.src = layer.src;
                 img.onload = () => {
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    loadedImages++;
                     // Save the canvas as an image when the last image is loaded
-                    if (layer === layers[layers.length - 1]) {
+                    if (loadedImages === layers.length) {
                         saveCanvasAsImage();
                     }
                 };
@@ -194,7 +206,7 @@
             const link = document.createElement('a');
             link.href = image;
             link.download = 'character.png';
-            
+    
             // Append the link to the body, click it to download the image, then remove it
             document.body.appendChild(link);
             link.click();
@@ -202,31 +214,56 @@
         }
     </script>
     
+    
     <script>
         const options = {
-            glasses: ['./assets/Glasses/Dark Grey Glasses.png', './assets/Glasses/Rave Glasses (orange).png'],
-            hair: ['./assets/Hair/Base Hair.png', './assets/Hair/Buns Hair.png', './assets/Hair/Good Hair Day Hair.png', './assets/Hair/Kirby Hair.png', './assets/Hair/Princess Hair.png'],
-            clothes: ['./assets/Clothes/Jackets & Hoodies/Black Jacket.png', './assets/Clothes/Shirts/Business Shirt.png', './assets/Clothes/Shirts/Grey Shirt.png',
-                    './assets/Clothes/Shirts/Camo Shirt (beige).png', './assets/Clothes/Shirts/Camo Shirt (blue).png', './assets/Clothes/Shirts/Camo Shirt (green).png',
-                    './assets/Clothes/Shirts/Earth Sucks Shirt (orange).png', './assets/Clothes/Shirts/Heart Overalls.png','./assets/Clothes/Shirts/Princess Dress.png','./assets/Clothes/Shirts/Spacesuit.png'],
-            makeup: ['./assets/Makeup/Love Look Makeup.png', './assets/Makeup/Pink Lipstick.png', './assets/Makeup/Red Lipstick.png', './assets/Makeup/Princess Face.png', './assets/Makeup/Rave Makeup.png'],
-            mouths: ['mouth1.png', 'mouth2.png', 'mouth3.png'],
-            accessories: ['./assets/Accessories/Necklaces/Original Heart Necklace.png', './assets/Accessories/Necklaces/Princess Necklace.png', 
-                          './assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png',
-                        './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png','./assets/Accessories/Hats/Princess Tiara.png','./assets/Accessories/Scarfs/Camo Scarf (green).png'],
-            arsenal: ['./assets/Arsenal (Gun Store)/MP5SD UI.png', './assets/Arsenal (Gun Store)/MP5SD.Skin.Pink UI.png'],
-            background: ['background1.png', 'background2.png', 'background3.png']
+            accessories: {
+                'Arsenal': ['./assets/Accessories/Arsenal (Gun Store)/Camo.Green.Arm.MP5SD.Pink.png', './assets/Accessories/Arsenal (Gun Store)/Camo.Green.Arm.MP5SD.Pink.png'],
+                'Cigarette Arms': ['./assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png', './assets/Accessories/Cigarette Arms/Default Cigarrette Arm.png'],
+                'Glasses': ['./assets/Accessories/Glasses/Alien Glasses.png', './assets/Accessories/Glasses/Bitcoin Glasses.png', './assets/Accessories/Glasses/Black Frame Glasses.png', './assets/Accessories/Glasses/Copy of Fish glasses.png', './assets/Accessories/Glasses/Dark Grey Glasses.png', './assets/Accessories/Glasses/Rave Glasses (orange.matte).png', './assets/Accessories/Glasses/Rave Glasses (purple.matte).png', './assets/Accessories/Glasses/Rave Glasses (blue.matte).png', './assets/Accessories/Glasses/Rave Glasses (green.matte).png', './assets/Accessories/Glasses/Rave Glasses (orange.bright).png'],
+                'Hats & Masks': ['./assets/Accessories/Hats & Masks/Princess Tiara.png', './assets/Accessories/Hats & Masks/Goldfish Mask.png', './assets/Accessories/Hats & Masks/Spacesuit Helmet.png'],
+                'Necklaces': ['./assets/Accessories/Necklaces/Original Heart Necklace.png', './assets/Accessories/Necklaces/Princess Necklace.png', './assets/Accessories/Necklaces/FBI Badge.png', './assets/Accessories/Necklaces/Copy of Fish accesories.png'],
+                'Scarfs': ['./assets/Accessories/Scarfs/Camo Scarf (green).png', './assets/Accessories/Scarfs/Camo Scarf (blue).png', './assets/Accessories/Scarfs/Camo Scarf (beige).png']
+            },
+            clothes: {
+                'Jackets & Hoodies': ['./assets/Clothes/Jackets & Hoodies/Bitcoin Hoodie (mauve).png', './assets/Clothes/Jackets & Hoodies/Black Jacket.png', './assets/Clothes/Jackets & Hoodies/Doge Hoodie.png', './assets/Clothes/Jackets & Hoodies/Pepe Hoodie.png', './assets/Clothes/Jackets & Hoodies/Solana Hoodie.png', './assets/Clothes/Jackets & Hoodies/Spacesuit.png'],
+                'Shirts': ['./assets/Clothes/Shirts/Blue Shirt.png', './assets/Clothes/Shirts/Black and Grey Shirt.png', './assets/Clothes/Shirts/Business Shirt.png', './assets/Clothes/Shirts/Grey Shirt.png', './assets/Clothes/Shirts/Camo Shirt (beige).png', './assets/Clothes/Shirts/Camo Shirt (blue).png', './assets/Clothes/Shirts/Camo Shirt (green).png', './assets/Clothes/Shirts/Earth Sucks Shirt (orange).png', './assets/Clothes/Shirts/Heart Overalls.png', './assets/Clothes/Shirts/Princess Dress.png', './assets/Clothes/Shirts/Goldfish Shirt.png']
+            },
+            expressions: {
+                'Mouths': ['./assets/Expressions/Excited Face.png', './assets/Expressions/Excited Hands.png', './assets/Expressions/Excited Lipstick.png', './assets/Expressions/Mad Face.png', './assets/Expressions/Mad Lipstick.png', ]
+            },
+            hair: {
+                'Styles': ['./assets/Hair/Base Hair.png', './assets/Hair/Buns Hair.png', './assets/Hair/Good Hair Day Hair.png', './assets/Hair/Kirby Hair.png', './assets/Hair/Princess Hair.png', './assets/Hair/Back Bun Hair.png', './assets/Hair/Copy of Fish hair.png', './assets/Hair/Ponytail Hair.png']
+            },
+            makeup: {
+                'Full Face': ['./assets/Makeup/Full Face/Love Look Makeup.png','./assets/Makeup/Full Face/Pink Lipstick.png', './assets/Makeup/Full Face/Princess Face.png', './assets/Makeup/Full Face/Rave Makeup.png', './assets/Makeup/Full Face/Red Lipstick.png'],
+                'Lips': ['./assets/Makeup/Lips/Big Lips.png', './assets/Makeup/Lips/Gloss Pink Lips.png', './assets/Makeup/Lips/Goldfish Lips(minismile-gloss-orange).png', './assets/Makeup/Lips/Green Lipstick.png', './assets/Makeup/Lips/High-gloss Pink Lips.png', './assets/Makeup/Lips/Pink Lipstick.png', './assets/Makeup/Lips/Princess Lips(minismile-pink).png', './assets/Makeup/Lips/Red Lipstick.png'],
+                'Makeup': ['./assets/Makeup/Makeup/Blue Dotted Shadow Makeup.png', './assets/Makeup/Makeup/Blush and Pink Shadow Makeup.png', './assets/Makeup/Makeup/Golsfish Eyes Makeup.png', './assets/Makeup/Makeup/No Makeup.png', './assets/Makeup/Makeup/Princess Makeup.png', './assets/Makeup/Makeup/red Shadow Makeup.png', ]
+            }
         };
 
         function selectCategory(category) {
             const optionsDiv = document.getElementById('options');
             optionsDiv.innerHTML = '';
-            options[category].forEach(option => {
-                const img = document.createElement('img');
-                img.src = option;
-                img.alt = option;
-                img.onclick = () => selectOption(category, option);
-                optionsDiv.appendChild(img);
+            Object.keys(options[category]).forEach(subcategory => {
+                const subcategoryDiv = document.createElement('div');
+                subcategoryDiv.className = 'option-group';
+                
+                const title = document.createElement('h3');
+                title.innerText = subcategory;
+                subcategoryDiv.appendChild(title);
+                
+                const itemsDiv = document.createElement('div');
+                options[category][subcategory].forEach(option => {
+                    const img = document.createElement('img');
+                    img.src = option;
+                    img.alt = option;
+                    img.onclick = () => selectOption(category, subcategory, option);
+                    itemsDiv.appendChild(img);
+                });
+                
+                subcategoryDiv.appendChild(itemsDiv);
+                optionsDiv.appendChild(subcategoryDiv);
             });
 
             // Remove 'selected' class from all buttons
@@ -240,15 +277,47 @@
 
         selectCategory('clothes');
 
-        function selectOption(category, option) {
+        function selectOption(category, subcategory, option) {
             const characterArea = document.getElementById('characterArea');
-            let layer = document.getElementById(category);
-            if (!layer) {
+            let layerId;
+
+            if (category === 'clothes') {
+                layerId = `clothes-${subcategory}`;
+            } else if (category === 'makeup' && subcategory === 'Full Face') {
+                layerId = 'makeup-Full Face';
+                characterArea.querySelectorAll('.character-layer[id^="makeup-"]').forEach(existingLayer => {
+                    existingLayer.remove();
+                });
+            } else if (category === 'makeup' && (subcategory === 'Makeup' || subcategory === 'Lips')) {
+                characterArea.querySelectorAll('.character-layer[id="makeup-Full Face"]').forEach(existingLayer => {
+                    existingLayer.remove();
+                });
+                layerId = `makeup-${subcategory}`;
+            } else {
+                layerId = `${category}-${subcategory}`;
+            }
+
+            let layer = document.getElementById(layerId);
+
+            if (layer) {
+                if (layer.src.endsWith(option.split('/').pop())) {
+                    // If the clicked option is already selected, remove it
+                    layer.remove();
+                } else {
+                    layer.src = option;
+                }
+            } else {
+                if (category === 'clothes') {
+                    characterArea.querySelectorAll('.character-layer[id^="clothes-"]').forEach(existingLayer => {
+                        existingLayer.remove();
+                    });
+                }
+
                 layer = document.createElement('img');
-                layer.id = category;
+                layer.id = layerId;
                 layer.className = 'character-layer';
-                
-                // Add z-index based on category
+                layer.src = option;
+
                 switch(category) {
                     case 'background':
                         layer.style.zIndex = 0;
@@ -265,26 +334,22 @@
                     case 'hair':
                         layer.style.zIndex = 4;
                         break;
-                    case 'mouths':
+                    case 'expressions':
                         layer.style.zIndex = 5;
                         break;
-                    case 'glasses':
+                    case 'accessories':
                         layer.style.zIndex = 6;
                         break;
-                    case 'accessories':
-                        layer.style.zIndex = 7;
-                        break;
-                    case 'arsenal':
-                        layer.style.zIndex = 8;
-                        break;
                     default:
-                        layer.style.zIndex = 10; // Default to a high z-index for other categories
+                        layer.style.zIndex = 10;
                 }
 
                 characterArea.appendChild(layer);
             }
-            layer.src = option;
         }
+
+
+
 
     </script>
 </body>
