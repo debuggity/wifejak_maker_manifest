@@ -283,6 +283,12 @@
 
             if (category === 'clothes') {
                 layerId = `clothes-${subcategory}`;
+                // Hide hair layer if "Pepe Hoodie" is selected
+                if (option.includes('Pepe Hoodie.png')) {
+                    document.getElementById('hair-Styles').style.display = 'none';
+                } else {
+                    document.getElementById('hair-Styles').style.display = 'block';
+                }
             } else if (category === 'makeup' && subcategory === 'Full Face') {
                 layerId = 'makeup-Full Face';
                 characterArea.querySelectorAll('.character-layer[id^="makeup-"]').forEach(existingLayer => {
@@ -334,22 +340,24 @@
                     case 'hair':
                         layer.style.zIndex = 4;
                         break;
+                    case 'accessories':
+                        if (subcategory === 'Necklaces') {
+                            layer.style.zIndex = 3; // Set a lower z-index for necklaces
+                        } else {
+                            layer.style.zIndex = 6;
+                        }
+                        break;
                     case 'expressions':
                         layer.style.zIndex = 5;
-                        break;
-                    case 'accessories':
-                        layer.style.zIndex = 6;
                         break;
                     default:
                         layer.style.zIndex = 10;
                 }
 
+
                 characterArea.appendChild(layer);
             }
         }
-
-
-
 
     </script>
 </body>
