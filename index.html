@@ -306,8 +306,9 @@
 
                 if (option.includes('Pepe Hoodie.png')) {
                     document.getElementById('hair-Styles').style.display = 'none';
-                    try {getElementById('accessories-Hats & Masks').style.display = 'none';}
-                    catch {}
+                    try{document.getElementById('accessories-Hats & Masks').style.display = 'none';}
+                    catch{console.log("failed")}
+
                     weird_hoodie = true;
                 } else {
                     document.getElementById('hair-Styles').style.display = 'block';
