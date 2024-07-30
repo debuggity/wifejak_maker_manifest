@@ -282,55 +282,19 @@
 
         selectCategory('clothes');
 
+        let currentClothing = null;
+        let currentCigaretteArm = null;
+
         function selectOption(category, subcategory, option) {
             const characterArea = document.getElementById('characterArea');
             let layerId;
 
             if (category === 'accessories' && subcategory === 'Cigarette Arms') {
                 layerId = 'accessories-Cigarette-Arms';
-                let cigaretteArm = './assets/Accessories/Cigarette Arms/Default Cigarette Arm.png';
-
-                // Check if any current clothing contains 'Camo'
-                const currentClothing = characterArea.querySelectorAll('.character-layer[id^="clothes-"]');
-                currentClothing.forEach(item => {
-                    if (item.src.includes('Camo')) {
-                        if (item.src.includes('beige')) {
-                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png';
-                        } else if (item.src.includes('blue')) {
-                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png';
-                        } else if (item.src.includes('green')) {
-                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png';
-                        }
-                    }
-                });
-
-                let layer = document.getElementById(layerId);
-                if (layer) {
-                    layer.src = cigaretteArm;
-                } else {
-                    layer = document.createElement('img');
-                    layer.id = layerId;
-                    layer.className = 'character-layer';
-                    layer.src = cigaretteArm;
-                    layer.style.zIndex = 6; // Adjust z-index accordingly
-                    characterArea.appendChild(layer);
-                }
-            } else if (category === 'accessories') {
-                layerId = `accessories-${subcategory}`;
-                // Hide hair layer if "Pepe Hoodie" is selected
-                if (option.includes('Spacesuit Helmet.png')) {
-                    document.getElementById('hair-Styles').style.display = 'none';
-                } else {
-                    document.getElementById('hair-Styles').style.display = 'block';
-                }
+                currentCigaretteArm = option; // Track the selected cigarette arm option
             } else if (category === 'clothes') {
                 layerId = `clothes-${subcategory}`;
-                // Hide hair layer if "Pepe Hoodie" is selected
-                if (option.includes('Pepe Hoodie.png')) {
-                    document.getElementById('hair-Styles').style.display = 'none';
-                } else {
-                    document.getElementById('hair-Styles').style.display = 'block';
-                }
+                currentClothing = option; // Track the selected clothing option
             } else {
                 layerId = `${category}-${subcategory}`;
             }
@@ -340,12 +304,14 @@
                 if (layer.src.endsWith(option.split('/').pop())) {
                     // If the clicked option is already selected, remove it
                     layer.remove();
-                } else if (layer.src.includes('Cigarette')){
-
-                }else {
+                    if (category === 'accessories' && subcategory === 'Cigarette Arms') {
+                        currentCigaretteArm = null; // Reset cigarette arm option if removed
+                    }
+                } else {
                     layer.src = option;
                 }
             } else {
+                // Remove existing layers for the category (e.g., all clothes layers)
                 if (category === 'clothes') {
                     characterArea.querySelectorAll('.character-layer[id^="clothes-"]').forEach(existingLayer => {
                         existingLayer.remove();
@@ -376,6 +342,8 @@
                     case 'accessories':
                         if (subcategory === 'Necklaces') {
                             layer.style.zIndex = 3; // Set a lower z-index for necklaces
+                        } else if (subcategory === 'Cigarette Arms') {
+                            updateCigaretteArm(option); // Update cigarette arm based on clothing
                         } else {
                             layer.style.zIndex = 6;
                         }
@@ -386,11 +354,42 @@
                     default:
                         layer.style.zIndex = 10;
                 }
-                console.log(layer.src)
 
                 characterArea.appendChild(layer);
             }
+
+            // Check and update cigarette arm if clothes are changed
+            if (category === 'clothes' && currentCigaretteArm) {
+                updateCigaretteArm(currentCigaretteArm);
+            }
         }
+
+        function updateCigaretteArm(option) {
+            let cigaretteArm = './assets/Accessories/Cigarette Arms/Default Cigarette Arm.png';
+
+            if (currentClothing.includes('Camo')) {
+                if (currentClothing.includes('beige')) {
+                    cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png';
+                } else if (currentClothing.includes('blue')) {
+                    cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png';
+                } else if (currentClothing.includes('green')) {
+                    cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png';
+                }
+            }
+
+            let layer = document.getElementById('accessories-Cigarette-Arms');
+            if (layer) {
+                layer.src = cigaretteArm;
+            } else {
+                layer = document.createElement('img');
+                layer.id = 'accessories-Cigarette-Arms';
+                layer.className = 'character-layer';
+                layer.src = cigaretteArm;
+                layer.style.zIndex = 6; // Adjust z-index accordingly
+                document.getElementById('characterArea').appendChild(layer);
+            }
+        }
+
 
 
     </script>
