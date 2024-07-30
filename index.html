@@ -219,7 +219,7 @@
         const options = {
             accessories: {
                 'Arsenal': ['./assets/Accessories/Arsenal (Gun Store)/Camo.Green.Arm.MP5SD.Pink.png', './assets/Accessories/Arsenal (Gun Store)/Camo.Green.Arm.MP5SD.Pink.png'],
-                'Cigarette Arms': ['./assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png', './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png', './assets/Accessories/Cigarette Arms/Default Cigarrette Arm.png'],
+                'Cigarette Arms': ['./assets/Accessories/Cigarette Arms/Default Cigarette Arm.png'],
                 'Glasses': ['./assets/Accessories/Glasses/Alien Glasses.png', './assets/Accessories/Glasses/Bitcoin Glasses.png', './assets/Accessories/Glasses/Black Frame Glasses.png', './assets/Accessories/Glasses/Copy of Fish glasses.png', './assets/Accessories/Glasses/Dark Grey Glasses.png', './assets/Accessories/Glasses/Rave Glasses (orange.matte).png', './assets/Accessories/Glasses/Rave Glasses (purple.matte).png', './assets/Accessories/Glasses/Rave Glasses (blue.matte).png', './assets/Accessories/Glasses/Rave Glasses (green.matte).png', './assets/Accessories/Glasses/Rave Glasses (orange.bright).png'],
                 'Hats & Masks': ['./assets/Accessories/Hats & Masks/Princess Tiara.png', './assets/Accessories/Hats & Masks/Goldfish Mask.png', './assets/Accessories/Hats & Masks/Spacesuit Helmet.png'],
                 'Necklaces': ['./assets/Accessories/Necklaces/Original Heart Necklace.png', './assets/Accessories/Necklaces/Princess Necklace.png', './assets/Accessories/Necklaces/FBI Badge.png', './assets/Accessories/Necklaces/Copy of Fish accesories.png'],
@@ -281,7 +281,36 @@
             const characterArea = document.getElementById('characterArea');
             let layerId;
 
-            if (category === 'clothes') {
+            if (category === 'accessories' && subcategory === 'Cigarette Arms') {
+                layerId = 'accessories-Cigarette-Arms';
+                let cigaretteArm = './assets/Accessories/Cigarette Arms/Default Cigarette Arm.png';
+
+                // Check if any current clothing contains 'Camo'
+                const currentClothing = characterArea.querySelectorAll('.character-layer[id^="clothes-"]');
+                currentClothing.forEach(item => {
+                    if (item.src.includes('Camo')) {
+                        if (item.src.includes('beige')) {
+                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Beige.Cigarette.png';
+                        } else if (item.src.includes('blue')) {
+                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Blue.Cigarette.png';
+                        } else if (item.src.includes('green')) {
+                            cigaretteArm = './assets/Accessories/Cigarette Arms/Camo.Green.Cigarette.png';
+                        }
+                    }
+                });
+
+                let layer = document.getElementById(layerId);
+                if (layer) {
+                    layer.src = cigaretteArm;
+                } else {
+                    layer = document.createElement('img');
+                    layer.id = layerId;
+                    layer.className = 'character-layer';
+                    layer.src = cigaretteArm;
+                    layer.style.zIndex = 6; // Adjust z-index accordingly
+                    characterArea.appendChild(layer);
+                }
+            } else if (category === 'clothes') {
                 layerId = `clothes-${subcategory}`;
                 // Hide hair layer if "Pepe Hoodie" is selected
                 if (option.includes('Pepe Hoodie.png')) {
@@ -304,12 +333,13 @@
             }
 
             let layer = document.getElementById(layerId);
-
             if (layer) {
                 if (layer.src.endsWith(option.split('/').pop())) {
                     // If the clicked option is already selected, remove it
                     layer.remove();
-                } else {
+                } else if (layer.src.includes('Cigarette')){
+
+                }else {
                     layer.src = option;
                 }
             } else {
@@ -353,11 +383,12 @@
                     default:
                         layer.style.zIndex = 10;
                 }
-
+                console.log(layer.src)
 
                 characterArea.appendChild(layer);
             }
         }
+
 
     </script>
 </body>
