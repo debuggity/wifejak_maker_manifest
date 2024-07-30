@@ -289,12 +289,26 @@
             const characterArea = document.getElementById('characterArea');
             let layerId;
 
-            if (category === 'accessories' && subcategory === 'Cigarette Arms') {
+            if (category === 'accessories' && subcategory === 'Hats & Masks') {
+                layerId = `accessories-${subcategory}`;
+                // Hide hair layer if "Pepe Hoodie" is selected
+                if (option.includes('Spacesuit Helmet.png')) {
+                    document.getElementById('hair-Styles').style.display = 'none';
+                } else {
+                    document.getElementById('hair-Styles').style.display = 'block';
+                }
+            } else if (category === 'accessories' && subcategory === 'Cigarette Arms') {
                 layerId = 'accessories-Cigarette-Arms';
                 currentCigaretteArm = option; // Track the selected cigarette arm option
             } else if (category === 'clothes') {
                 layerId = `clothes-${subcategory}`;
-                currentClothing = option; // Track the selected clothing option
+
+                if (option.includes('Pepe Hoodie.png')) {
+                    document.getElementById('hair-Styles').style.display = 'none';
+                } else {
+                    document.getElementById('hair-Styles').style.display = 'block';
+                    currentClothing = option;
+                }
             } else {
                 layerId = `${category}-${subcategory}`;
             }
