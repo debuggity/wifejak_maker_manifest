@@ -153,7 +153,8 @@
         <div class="character-area" id="characterArea">
             <img id="body" class="character-layer" src="./assets/Wifejak Body/Standard Body.png" style="z-index: 1;">
             <img id="hair-Styles" class="character-layer" src="./assets/Hair/Base Hair.png" style="z-index: 4;">
-            <img id="makeup-Full Face" class="character-layer" src="./assets/Makeup/Full Face/Pink Lipstick.png" style="z-index: 3;">
+            <img id="makeup-Makeup" class="character-layer" src="./assets/Makeup/Makeup/No Makeup.png" style="z-index: 3;">
+            <img id="makeup-Lips" class="character-layer" src="./assets/Makeup/Lips/Pink Lipstick.png" style="z-index: 3;">
             <img id="clothes-Shirts" class="character-layer" src="./assets/Clothes/Shirts/Grey Shirt.png" style="z-index: 2;">
         </div>
 
@@ -241,7 +242,6 @@
                 'Styles': ['./assets/Hair/Base Hair.png', './assets/Hair/Buns Hair.png', './assets/Hair/Good Hair Day Hair.png', './assets/Hair/Kirby Hair.png', './assets/Hair/Princess Hair.png', './assets/Hair/Back Bun Hair.png', './assets/Hair/Copy of Fish hair.png', './assets/Hair/Ponytail Hair.png']
             },
             makeup: {
-                'Full Face': ['./assets/Makeup/Full Face/Love Look Makeup.png','./assets/Makeup/Full Face/Pink Lipstick.png', './assets/Makeup/Full Face/Princess Face.png', './assets/Makeup/Full Face/Rave Makeup.png', './assets/Makeup/Full Face/Red Lipstick.png'],
                 'Lips': ['./assets/Makeup/Lips/Big Lips.png', './assets/Makeup/Lips/Gloss Pink Lips.png', './assets/Makeup/Lips/Goldfish Lips(minismile-gloss-orange).png', './assets/Makeup/Lips/Green Lipstick.png', './assets/Makeup/Lips/High-gloss Pink Lips.png', './assets/Makeup/Lips/Pink Lipstick.png', './assets/Makeup/Lips/Princess Lips(minismile-pink).png', './assets/Makeup/Lips/Red Lipstick.png'],
                 'Makeup': ['./assets/Makeup/Makeup/Blue Dotted Shadow Makeup.png', './assets/Makeup/Makeup/Blush and Pink Shadow Makeup.png', './assets/Makeup/Makeup/Golsfish Eyes Makeup.png', './assets/Makeup/Makeup/No Makeup.png', './assets/Makeup/Makeup/Princess Makeup.png', './assets/Makeup/Makeup/Red Shadow Makeup.png', ]
             }
@@ -315,6 +315,14 @@
                     layer.style.zIndex = 6; // Adjust z-index accordingly
                     characterArea.appendChild(layer);
                 }
+            } else if (category === 'accessories') {
+                layerId = `accessories-${subcategory}`;
+                // Hide hair layer if "Pepe Hoodie" is selected
+                if (option.includes('Spacesuit Helmet.png')) {
+                    document.getElementById('hair-Styles').style.display = 'none';
+                } else {
+                    document.getElementById('hair-Styles').style.display = 'block';
+                }
             } else if (category === 'clothes') {
                 layerId = `clothes-${subcategory}`;
                 // Hide hair layer if "Pepe Hoodie" is selected
@@ -323,16 +331,6 @@
                 } else {
                     document.getElementById('hair-Styles').style.display = 'block';
                 }
-            } else if (category === 'makeup' && subcategory === 'Full Face') {
-                layerId = 'makeup-Full Face';
-                characterArea.querySelectorAll('.character-layer[id^="makeup-"]').forEach(existingLayer => {
-                    existingLayer.remove();
-                });
-            } else if (category === 'makeup' && (subcategory === 'Makeup' || subcategory === 'Lips')) {
-                characterArea.querySelectorAll('.character-layer[id="makeup-Full Face"]').forEach(existingLayer => {
-                    existingLayer.remove();
-                });
-                layerId = `makeup-${subcategory}`;
             } else {
                 layerId = `${category}-${subcategory}`;
             }
