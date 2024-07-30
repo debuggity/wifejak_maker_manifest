@@ -284,14 +284,15 @@
 
         let currentClothing = './assets/Clothes/Shirts/Grey Shirt.png';
         let currentCigaretteArm = null;
+        let weird_hoodie = false;
 
         function selectOption(category, subcategory, option) {
             const characterArea = document.getElementById('characterArea');
             let layerId;
 
             if (category === 'accessories' && subcategory === 'Hats & Masks') {
+                if (weird_hoodie) {return;}
                 layerId = `accessories-${subcategory}`;
-                // Hide hair layer if "Pepe Hoodie" is selected
                 if (option.includes('Spacesuit Helmet.png')) {
                     document.getElementById('hair-Styles').style.display = 'none';
                 } else {
@@ -305,9 +306,13 @@
 
                 if (option.includes('Pepe Hoodie.png')) {
                     document.getElementById('hair-Styles').style.display = 'none';
+                    try {getElementById('accessories-Hats & Masks').style.display = 'none';}
+                    catch {}
+                    weird_hoodie = true;
                 } else {
                     document.getElementById('hair-Styles').style.display = 'block';
                     currentClothing = option;
+                    weird_hoodie = false;
                 }
             } else {
                 layerId = `${category}-${subcategory}`;
@@ -345,10 +350,10 @@
                         layer.style.zIndex = 1;
                         break;
                     case 'clothes':
-                        layer.style.zIndex = 2;
+                        layer.style.zIndex = 3;
                         break;
                     case 'makeup':
-                        layer.style.zIndex = 3;
+                        layer.style.zIndex = 2;
                         break;
                     case 'hair':
                         layer.style.zIndex = 4;
@@ -377,6 +382,7 @@
                 updateCigaretteArm(currentCigaretteArm);
             }
         }
+
 
         function updateCigaretteArm(option) {
             let cigaretteArm = './assets/Accessories/Cigarette Arms/Default Cigarette Arm.png';
